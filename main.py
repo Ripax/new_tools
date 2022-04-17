@@ -6,57 +6,64 @@ sys.path.append('/Users/rion/Github/new_tools')
 from PySide2.QtWidgets import *
 from NukeInfo import Ui_Form
 import  nukescripts 
+import datetime
+
 
 username = os.getlogin()
 v_string = nuke.NUKE_VERSION_STRING
+
 
 
 class window(Ui_Form, QWidget):
     def __init__(self):
         super(window, self).__init__()
         self.setupUi(self)
-        self.setWindowTitle(("QrCode v1.0.5 using by ({x})").format(x=username))
+        self.setWindowTitle(("Nuke Script Information for TD : ({x})").format(x=username))
         self.pushButton_welcome.released.connect(self.Welcome)
         self.pushButton_date.released.connect(self._date)
-        self.pushButton_root.released.connect(self._force_update_all)
+        self.pushButton_root.released.connect(self._root)
         self.pushButton_nk_version.released.connect(self._version)
         
           
     # Button Welcome
 
     def Welcome(self):
-        print("You pressed pushButton_welcome")
+        self.label.setText('')
+        self.label.setText('You pressed pushButton_welcome')
 
     # Button Welcome
 
     def _date(self):
-        print("You pressed date")
+        time = datetime.datetime.now()
+        self.label.setText('')
+        self.label.setText('Now Time is : {}'.format(time))
 
 # Button Root
+
     def _root(self):
-        root_path = nuke.root().name()
-        root_path = root_path.split('/')[-1]
-        print(root_path)
-    # Button Version
-
-    def _version(self):
-        print("{u} you are running Nuke{v} version".format(u=username, v=v_string))
-
-    def _force_update_all(self):
+        userinput = self.lineEdit_class.text()
         with nuke.root():
             node_count = 0
             for node in nuke.allNodes():
-                if node.Class() == "Copy":
+                if node.Class() == userinput:
                     node_count += 1
+            return node_count   
+        nodes_Name = node_count()
+        self.label.setText('')
+        self.label.setText('Updated : {} Copy Node In this Script. '.format(nodes_Name) )
 
-            nuke.message("Updated : %s Copy Node In this Script." % node_count) 
+    # Button Version
+
+    def _version(self):
+        self.label.setText('')
+        self.label.setText("{u} you are running Nuke{v} version".format(u=username, v=v_string))
 
 # Added into Nuke Panel
-nukescripts.registerWidgetAsPanel('window', 'Nuke info Panel', 'uk.co.thefoundry.window', True)
+nukescripts.registerWidgetAsPanel('window', 'Nuke Script Information for TD : ({x})'.format(x=username), 'uk.co.thefoundry.window', True)
 
 
 # For widgets
-if __name__ == '__main__':
-    widgets = window()
-    widgets.show()
+#if __name__ == '__main__':
+#    widgets = window()
+#    widgets.show()
 
