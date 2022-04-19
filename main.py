@@ -28,8 +28,18 @@ class window(Ui_Form, QWidget):
     # Button Welcome
 
     def Welcome(self):
+        allClass = ["OFXuk.co.thefoundry.furnace"]
+        allNodes = nuke.allNodes()
+        _NodeName = []
+        for node in allNodes:
+            for clas in allClass:
+                if node.Class().startswith(clas):
+                    _NodeName.append(node.name())
+
+        return _NodeName
+        
         self.label.setText('')
-        self.label.setText('You pressed pushButton_welcome')
+        self.label.setText(self._NodeName)
 
     # Button Welcome
 
@@ -59,11 +69,11 @@ class window(Ui_Form, QWidget):
         self.label.setText("{u} you are running Nuke{v} version".format(u=username, v=v_string))
 
 # Added into Nuke Panel
-nukescripts.registerWidgetAsPanel('window', 'Nuke Script Information for TD : ({x})'.format(x=username), 'uk.co.thefoundry.window', True)
+# nukescripts.registerWidgetAsPanel('window', 'Nuke Script Information for TD : ({x})'.format(x=username), 'uk.co.thefoundry.window', True)
 
 
 # For widgets
-#if __name__ == '__main__':
-#    widgets = window()
-#    widgets.show()
+if __name__ == '__main__':
+   widgets = window()
+   widgets.show()
 
